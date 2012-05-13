@@ -637,6 +637,19 @@ goog.date.Interval.SECONDS = 's';
 
 
 /**
+ * @return {boolean} Whether all fields of the interval are zero.
+ */
+goog.date.Interval.prototype.isZero = function() {
+  return this.years == 0 &&
+         this.months == 0 &&
+         this.days == 0 &&
+         this.hours == 0 &&
+         this.minutes == 0 &&
+         this.seconds == 0;
+};
+
+
+/**
  * @return {!goog.date.Interval} Negative of this interval.
  */
 goog.date.Interval.prototype.getInverse = function() {
@@ -1555,8 +1568,9 @@ goog.date.DateTime.prototype.toUTCIsoString = function(opt_verbose, opt_tz) {
 /**
  * Tests whether given datetime is exactly equal to this DateTime.
  *
- * @param {goog.date.DateTime} other The datetime to compare.
+ * @param {goog.date.Date} other The datetime to compare.
  * @return {boolean} Whether the given datetime is exactly equal to this one.
+ * @override
  */
 goog.date.DateTime.prototype.equals = function(other) {
   return this.getTime() == other.getTime();
