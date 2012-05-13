@@ -103,11 +103,14 @@ goog.debug.expose = function(obj, opt_showFn) {
  * @param {*} obj Object to expose.
  * @param {boolean=} opt_showFn Also show properties that are functions (by
  *     default, functions are omitted).
+ * @param {boolean=} opt_hideGoogleClosure Hide closure_uid_* properties that 
+ *      are created by goog.getUid()
  * @return {string} A string representation of {@code obj}.
  */
-goog.debug.deepExpose = function(obj, opt_showFn) {
-  var previous = new goog.structs.Set();
-  var str = [];
+goog.debug.deepExpose = function(obj, opt_showFn, opt_hideGoogleClosure) {
+  var str = '', g = goog, re = new RegExp('closure_uid_');
+  var previous = new g.structs.Set();
+
 
   var helper = function(obj, space) {
     var nestspace = space + '  ';
@@ -118,43 +121,45 @@ goog.debug.deepExpose = function(obj, opt_showFn) {
 
     /** @preserveTry */
     try {
-      if (!goog.isDef(obj)) {
-        str.push('undefined');
-      } else if (goog.isNull(obj)) {
-        str.push('NULL');
-      } else if (goog.isString(obj)) {
-        str.push('"' + indentMultiline(obj) + '"');
-      } else if (goog.isFunction(obj)) {
-        str.push(indentMultiline(String(obj)));
-      } else if (goog.isObject(obj)) {
+      if (!g.isDef(obj)) {
+        str += 'undefined';
+      } else if (g.isNull(obj)) {
+        str += 'NULL';
+      } else if (g.isString(obj)) {
+        str += '"' + indentMultiline(obj) + '"';
+      } else if (g.isFunction(obj)) {
+        str += indentMultiline(String(obj));
+      } else if (g.isObject(obj)) {
         if (previous.contains(obj)) {
           // TODO(user): This is a bug; it falsely detects non-loops as loops
           // when the reference tree contains two references to the same object.
-          str.push('*** reference loop detected ***');
+          str += '*** reference loop detected ***';
         } else {
           previous.add(obj);
-          str.push('{');
+          str += '{';
           for (var x in obj) {
-            if (!opt_showFn && goog.isFunction(obj[x])) {
+            if (!opt_showFn && g.isFunction(obj[x])) {
               continue;
             }
-            str.push('\n');
-            str.push(nestspace);
-            str.push(x + ' = ');
+            if (opt_hideGoogleClosure && x.match(re))
+              continue;
+            str += '\n';
+            str += nestspace;
+            str += x + ' = ';
             helper(obj[x], nestspace);
           }
-          str.push('\n' + space + '}');
+          str += '\n' + space + '}';
         }
       } else {
-        str.push(obj);
+        str += obj;
       }
     } catch (e) {
-      str.push('*** ' + e + ' ***');
+      str += '*** ' + e + ' ***';
     }
   };
 
   helper(obj, '');
-  return str.join('');
+  return str;
 };
 
 
