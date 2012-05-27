@@ -137,7 +137,7 @@ goog.debug.deepExpose = function(obj, opt_showFn, opt_hideGoogleClosure) {
         } else {
           previous.add(obj);
           str.push('{');
-          for (var x in obj) {            
+          for (var x in obj) {
             if (!opt_showFn && goog.isFunction(obj[x])) {
               continue;
             }
