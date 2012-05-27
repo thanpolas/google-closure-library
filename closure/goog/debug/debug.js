@@ -108,9 +108,8 @@ goog.debug.expose = function(obj, opt_showFn) {
  * @return {string} A string representation of {@code obj}.
  */
 goog.debug.deepExpose = function(obj, opt_showFn, opt_hideGoogleClosure) {
-  var str = '', g = goog, re = new RegExp('closure_uid_');
-  var previous = new g.structs.Set();
-
+  var re = new RegExp('closure_uid_');
+  var previous = new goog.structs.Set();
 
   var helper = function(obj, space) {
     var nestspace = space + '  ';
@@ -121,15 +120,15 @@ goog.debug.deepExpose = function(obj, opt_showFn, opt_hideGoogleClosure) {
 
     /** @preserveTry */
     try {
-      if (!g.isDef(obj)) {
+      if (!goog.isDef(obj)) {
         str += 'undefined';
-      } else if (g.isNull(obj)) {
+      } else if (goog.isNull(obj)) {
         str += 'NULL';
-      } else if (g.isString(obj)) {
+      } else if (goog.isString(obj)) {
         str += '"' + indentMultiline(obj) + '"';
-      } else if (g.isFunction(obj)) {
+      } else if (goog.isFunction(obj)) {
         str += indentMultiline(String(obj));
-      } else if (g.isObject(obj)) {
+      } else if (goog.isObject(obj)) {
         if (previous.contains(obj)) {
           // TODO(user): This is a bug; it falsely detects non-loops as loops
           // when the reference tree contains two references to the same object.
@@ -138,9 +137,10 @@ goog.debug.deepExpose = function(obj, opt_showFn, opt_hideGoogleClosure) {
           previous.add(obj);
           str += '{';
           for (var x in obj) {
-            if (!opt_showFn && g.isFunction(obj[x])) {
+            if (!opt_showFn && goog.isFunction(obj[x])) {
               continue;
             }
+            // check if we want to hide closure_uid_ properties            
             if (opt_hideGoogleClosure && x.match(re))
               continue;
             str += '\n';
