@@ -13,23 +13,22 @@
 // limitations under the License.
 
 /**
- * @fileoverview This is a stub for backward compatibility.
- * For actual documentation, please see {@link goog.ui.ac.RenderOptions}.
+ * @fileoverview Definition of MenuBarRenderer decorator, a static call into
+ * the goog.ui.registry.
  *
+ * @see ../demos/menubar.html
  */
 
-goog.provide('goog.ui.AutoComplete.RenderOptions');
+goog.provide('goog.ui.menuBarDecorator');
 
-goog.require('goog.ui.AutoComplete');
-goog.require('goog.ui.ac.RenderOptions');
+goog.require('goog.ui.Container');
+goog.require('goog.ui.menuBar');
 
 
 
-//TODO(user): Remove this after known usages are replaced.
 /**
- * This is a stub for backward compatibility.
- * For actual documentation, please see {@link goog.ui.ac.RenderOptions}.
- * @constructor
- * @deprecated Use {@link goog.ui.ac.RenderOptions} instead.
+ * Register a decorator factory function. 'goog-menubar' defaults to
+ * goog.ui.MenuBarRenderer.
  */
-goog.ui.AutoComplete.RenderOptions = goog.ui.ac.RenderOptions;
+goog.ui.registry.setDecoratorByClassName(goog.ui.MenuBarRenderer.CSS_CLASS,
+    goog.ui.menuBar.create);

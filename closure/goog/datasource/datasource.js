@@ -50,6 +50,8 @@ goog.ds.DataNode = function() {};
 
 /**
  * Get the value of the node
+ * @param {...?} var_args Do not check arity of arguments, because
+ *     some subclasses require args.
  * @return {*} The value of the node, or null if no value.
  */
 goog.ds.DataNode.prototype.get = goog.abstractMethod;
@@ -222,8 +224,8 @@ goog.ds.BaseDataNode.prototype.getDataName = goog.abstractMethod;
 goog.ds.BaseDataNode.prototype.getDataPath = function() {
   var parentPath = '';
   var myName = this.getDataName();
-  if (this.getParent_ && this.getParent_()) {
-    parentPath = this.getParent_().getDataPath() +
+  if (this.getParent && this.getParent()) {
+    parentPath = this.getParent().getDataPath() +
         (myName.indexOf(goog.ds.STR_ARRAY_START) != -1 ? '' :
         goog.ds.STR_PATH_SEPARATOR);
   }
@@ -251,9 +253,8 @@ goog.ds.BaseDataNode.prototype.getLoadState = function() {
  * Gets the parent node. Subclasses implement this function
  * @type {Function}
  * @protected
- * @suppress {underscore}
  */
-goog.ds.BaseDataNode.prototype.getParent_ = null;
+goog.ds.BaseDataNode.prototype.getParent = null;
 
 
 /**
@@ -592,9 +593,8 @@ goog.ds.SortedNodeList.prototype.setNode = function(name, node) {
 /**
  * The character denoting an attribute.
  * @type {string}
- * @private
  */
-goog.ds.STR_ATTRIBUTE_START_ = '@';
+goog.ds.STR_ATTRIBUTE_START = '@';
 
 
 /**
